@@ -1,19 +1,41 @@
-import * as React from 'react';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import Container from './components/Container/Container';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+import Home from './components/Home/Home';
 
-interface IAppProps {
-}
+import { RedirectToSignIn, SignedIn, SignedOut } from '@clerk/clerk-react';
 
-const App: React.FunctionComponent<IAppProps> = () => {
-  return(
+const router = createBrowserRouter(
+  createRoutesFromElements(
     <>
-      <Header/>
-      <Container/>
-      <Footer/>
+      <Route index element={<Home />} />
+      <Route
+        path="/api"
+        element={
+          <>
+            <SignedIn>
+              <Home/>
+            </SignedIn>
+
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </>
+        }
+      />
     </>
-  ) ;
-};
+  )
+);
+
+function App() {
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
+}
 
 export default App;

@@ -52,6 +52,24 @@ export const getUrl = async (req: express.Request, res: express.Response) => {
   }
 };
 
+export const editUrl = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const { id, fullUrl } = req.body; 
+    const shortUrl = await urlModel.findByIdAndUpdate(id, { fullUrl }, { new: true });
+
+    if (!shortUrl) {
+      return res.status(404).send({ message: "URL not found!" });
+    }
+
+    res.status(200).send(shortUrl);
+  } catch (error) {
+    res.status(500).send({ message: "Something went wrong!" });
+  }
+};
+
 export const deleteUrl = async (
   req: express.Request,
   res: express.Response

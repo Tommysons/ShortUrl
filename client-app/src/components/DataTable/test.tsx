@@ -33,29 +33,21 @@ const DataTable: React.FunctionComponent<IDataTableProps> = (props) => {
         try{
     
             await navigator.clipboard.writeText(`${serverUrl}/shortUrl/${url}`)
-            updateReloadState()
             alert(`URL copied: ${serverUrl}/shortUrl/${url}`)
         }catch(error){
             console.log(error)
         }
     }
 
-    const saveChanges = async ()=>{
-        console.log("save button has been clicked")
-        try{
-            if(!editId){
-                console.error("No editId provided")
-                return
-            }
-            await axios.post(`${serverUrl}/shortUrl/${editId}`, {shortUrl: newShortUrl})
-            updateReloadState()
-            closeModal()
-
-        }catch(err){
-            console.error("Error editing URL: ", err)
+    const saveChanges = async () => {
+        try {
+            await axios.post(`${serverUrl}/shortUrl/${editId}`, { shortUrl: newShortUrl });
+            updateReloadState();
+            closeModal(); // Close modal after saving changes
+        } catch (err) {
+            console.error("Error editing Url: ", err);
         }
-        
-    }
+    };
 
     const deleteUrl = async (id: string) => {
         const response = await axios.delete(`${serverUrl}/shortUrl/${id}`);

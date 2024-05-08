@@ -57,14 +57,15 @@ export const editUrl = async (
   res: express.Response
 ) => {
   try {
-    const { id, fullUrl } = req.body; 
-    const shortUrl = await urlModel.findByIdAndUpdate(id, { fullUrl }, { new: true });
+    const { id } = req.params; 
+    const { shortUrl } = req.body
+    const newShortUrl = await urlModel.findByIdAndUpdate(id, { shortUrl }, { new: true });
 
-    if (!shortUrl) {
+    if (!newShortUrl) {
       return res.status(404).send({ message: "URL not found!" });
     }
 
-    res.status(200).send(shortUrl);
+    res.status(200).send(newShortUrl);
   } catch (error) {
     res.status(500).send({ message: "Something went wrong!" });
   }

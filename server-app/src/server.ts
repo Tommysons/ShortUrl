@@ -17,7 +17,7 @@ app.use(cors({
     credentials: true
 }))
 
-app.use("/api", shortUrl)
+app.use("/api/", shortUrl)
 
 // app.get("/", (req, res) =>{
 //     res.send("Hello world")

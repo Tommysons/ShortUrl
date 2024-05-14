@@ -1,24 +1,39 @@
 import express from "express";
 import { urlModel } from "../model/shortUrl";
+import { LooseAuthProp } from "@clerk/clerk-sdk-node";
+
+// interface CustomRequest extends express.Request, LooseAuthProp {
+//   user?: { id: string }; 
+// }
+
+    interface Request extends LooseAuthProp {
+      user?: { id: string }
+    }
+
+
 
 export const createUrl = async (
   req: express.Request,
   res: express.Response
 ) => {
+  
   try {
-    console.log("The fullUrl is ", req.body.fullUrl);
     const { fullUrl } = req.body;
-    const urlFound = await urlModel.find({ fullUrl });
+    const userId = req.auth.userId;
+    
+    console.log("Request Object:", req.auth)
+    const urlFound = await urlModel.find({ fullUrl, userId });
     if (urlFound.length > 0) {
       res.status(409);
       res.send(urlFound);
     } else {
-      const shortUrl = await urlModel.create({ fullUrl });
+      const shortUrl = await urlModel.create({ fullUrl, userId });
       res.status(201).send(shortUrl);
     }
   } catch (error) {
     res.status(500).send({ message: "Something went wrong!" });
   }
+
 };
 
 export const getAllUrl = async (
@@ -26,20 +41,23 @@ export const getAllUrl = async (
   res: express.Response
 ) => {
   try {
-    const shortUrls = await urlModel.find().sort({ createdAt: -1 });
-    if (shortUrls.length < 0) {
-      res.status(404).send({ message: "Short Urls not found!" });
-    } else {
-      res.status(200).send(shortUrls);
-    }
+    const userId = req.auth.userId;
+    console.log( req.auth);
+    
+    const shortUrls = await urlModel.find({ userId }).sort({ createdAt: -1 });
+    res.status(200).send(shortUrls);
   } catch (error) {
     res.status(500).send({ message: "Something went wrong!" });
   }
 };
 
-export const getUrl = async (req: express.Request, res: express.Response) => {
+export const getUrl = async (
+  req: express.Request, 
+  res: express.Response
+) => {
   try {
-    const shortUrl = await urlModel.findOne({ shortUrl: req.params.id });
+    const userId = req.auth.userId;
+    const shortUrl = await urlModel.findOne({ shortUrl: req.params.id, userId });
     if (!shortUrl) {
       res.status(404).send({ message: "Full Url not found!" });
     } else {
@@ -55,11 +73,12 @@ export const getUrl = async (req: express.Request, res: express.Response) => {
 export const editUrl = async (
   req: express.Request,
   res: express.Response
-) => {
+) => {  
   try {
+    const userId = req.auth.userId;
     const { id } = req.params; 
     const { shortUrl } = req.body
-    const newShortUrl = await urlModel.findByIdAndUpdate(id, { shortUrl }, { new: true });
+    const newShortUrl = await urlModel.findByIdAndUpdate({_id:id, userId,}, { shortUrl }, { new: true });
 
     if (!newShortUrl) {
       return res.status(404).send({ message: "URL not found!" });
@@ -76,7 +95,8 @@ export const deleteUrl = async (
   res: express.Response
 ) => {
   try {
-    const shortUrl = await urlModel.findByIdAndDelete({ _id: req.params.id });
+    const userId = req.auth.userId;
+    const shortUrl = await urlModel.findByIdAndDelete({ _id: req.params.id, userId });
     if (shortUrl) {
       res.status(200).send({ message: "Requested URL succesfully deleted!" });
     }

@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 
+interface IShortUrl extends mongoose.Document{
+    fullUrl: string
+    shortUrl: string
+    clicks: number
+    userId: string
+}
+
 const shortUrlSchema = new mongoose.Schema({
     fullUrl : {
         type: String,
@@ -14,10 +21,10 @@ const shortUrlSchema = new mongoose.Schema({
     clicks: {
         type: Number,
         default: 0
-    }
+    },
 },
 {
     timestamps: true
 })
 
-export const urlModel = mongoose.model("ShortUrl", shortUrlSchema)
+export const urlModel = mongoose.model<IShortUrl>("ShortUrl", shortUrlSchema)

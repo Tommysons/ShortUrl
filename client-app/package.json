@@ -10,14 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.0.3",
+    "@clerk/clerk-react": "^5.0.5",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.8",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0"
   },
   "devDependencies": {
+    "@types/isomorphic-fetch": "^0.0.39",
+    "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

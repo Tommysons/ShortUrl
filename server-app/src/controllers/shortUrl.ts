@@ -20,9 +20,10 @@ export const createUrl = async (
   try {
     const { fullUrl } = req.body;
     const userId = req.auth.userId;
-    
+    console.log("CREATE AUTH: ",req.auth)
     console.log("Request Object:", req.auth)
     const urlFound = await urlModel.find({ fullUrl, userId });
+    // console.log(userId)
     if (urlFound.length > 0) {
       res.status(409);
       res.send(urlFound);

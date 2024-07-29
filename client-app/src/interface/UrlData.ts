@@ -4,5 +4,6 @@ export interface UrlData {
     shortUrl: string,
     clicks: number,
    createdAt: Date,
-   updatedAt: Date 
+   updatedAt: Date,
+   userId: string 
 }

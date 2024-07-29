@@ -1,6 +1,7 @@
   import * as React from "react";
   import axios from "axios";
   import { serverUrl } from "../../helpers/Constants";
+  import { useAuth } from "@clerk/clerk-react";
 
   interface IFormContainerProps {
     updateReloadState: () => void
@@ -8,14 +9,24 @@
 
   const FormContainer: React.FunctionComponent<IFormContainerProps> = (props) => {
 
+    const {getToken} = useAuth()
     const {updateReloadState} = props
     const [fullUrl, setFullUrl] = React.useState<string>("");
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
-        await axios.post(`${serverUrl}/shorturl`, {
+        const token = await getToken()
+        await axios.post(`${serverUrl}/shorturl` ,  {
           fullUrl: fullUrl,
-        });
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+            mode: "cors",
+          },
+        }
+      );
         setFullUrl("");
         updateReloadState()
 

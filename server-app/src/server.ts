@@ -31,9 +31,7 @@ declare module 'express-serve-static-core' {
 
 app.use(ClerkExpressWithAuth());
 
-app.get("/protected", (req, res) => {
-  res.json(req.auth);
-})
+
 
 app.use("/api/", shortUrl);
 

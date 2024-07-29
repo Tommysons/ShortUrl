@@ -1,9 +1,9 @@
 import express from "express"
-import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
+
 import { createUrl, getAllUrl, getUrl, editUrl, deleteUrl } from "../controllers/shortUrl"
 const router = express.Router()
 
-router.use(ClerkExpressWithAuth())
+
 
 router.post("/shortUrl", createUrl)
 router.get("/shortUrl", getAllUrl)
